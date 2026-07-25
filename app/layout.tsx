@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Inter, JetBrains_Mono } from "next/font/google";
 import CursorSpotlight from "@/components/CursorSpotlight";
 import "./globals.css";
+import { getProfile } from "@/lib/api";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -21,11 +22,14 @@ const jbMono = JetBrains_Mono({
   variable: "--font-jbmono",
 });
 
-export const metadata: Metadata = {
-  title: "Nama Kamu — Full-Stack Developer",
-  description:
-    "Portofolio project freelance: web app, dashboard, dan API yang sudah dikerjakan.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const profile = await getProfile();
+  if (!profile) return { title: "Portfolio", description: "..." };
+  return {
+    title: `${profile.name} — ${profile.role}`,
+    description: profile.tagline,
+  };
+}
 
 export default function RootLayout({
   children,
