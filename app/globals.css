@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-bg text-ink font-body antialiased;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    @apply bg-func/30 text-ink;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #0a84ff;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -----------------------------------------------------------------
+   macOS-style aurora wallpaper. Fixed behind all content on every
+   page — soft, blurred color blobs that drift slowly, like a macOS
+   dynamic desktop picture. Everything else sits on top as glass.
+----------------------------------------------------------------- */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  background:
+    radial-gradient(
+      38% 32% at 18% 22%,
+      rgba(10, 132, 255, 0.55),
+      transparent 70%
+    ),
+    radial-gradient(
+      42% 38% at 82% 15%,
+      rgba(191, 90, 242, 0.45),
+      transparent 70%
+    ),
+    radial-gradient(
+      46% 40% at 75% 78%,
+      rgba(48, 209, 88, 0.28),
+      transparent 70%
+    ),
+    radial-gradient(
+      34% 30% at 15% 82%,
+      rgba(255, 159, 10, 0.28),
+      transparent 70%
+    );
+  filter: blur(90px) saturate(140%);
+  animation: mac-drift 28s ease-in-out infinite alternate;
+}
+
+body::after {
+  animation-duration: 36s;
+  animation-direction: alternate-reverse;
+  opacity: 0.55;
+}
+
+@keyframes mac-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(3%, -4%, 0) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+  }
+}
+
+/* -----------------------------------------------------------------
+   Glass surfaces — the recurring "material" of the page.
+----------------------------------------------------------------- */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(34px) saturate(180%);
+  -webkit-backdrop-filter: blur(34px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.glass-hover {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+/* -----------------------------------------------------------------
+   Cursor-tracking spotlight glow. Pair with an onMouseMove handler
+   that sets --x / --y (in px, relative to the element) as the mouse
+   moves — see ProjectCard.tsx for the reference implementation.
+----------------------------------------------------------------- */
+.glow {
+  position: relative;
+}
+
+.glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    480px circle at var(--x, 50%) var(--y, 50%),
+    rgba(10, 132, 255, 0.18),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.glow:hover::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow::before {
+    transition: none;
+  }
+}
+
+/* -----------------------------------------------------------------
+   Page-wide cursor spotlight. Follows the mouse across the entire
+   site (rendered once in app/layout.tsx via <CursorSpotlight />),
+   sitting above the wallpaper but below the navbar.
+
+   Tune the glow here:
+   --spotlight-size  diameter of the bright circle. Bigger = the glow
+                      reaches further from the cursor.
+   --spotlight-core   opacity at the very center. Higher = brighter,
+                       more visible "hot spot".
+   --spotlight-fade    the % of the radius where it's already fully
+                       transparent. Lower = a thin, tight glow that
+                       falls off fast. Higher = a thick, soft glow
+                       that spreads gradually. This is the main knob
+                       for "ketebalan".
+----------------------------------------------------------------- */
+:root {
+  --spotlight-size: 550px;
+  --spotlight-core: 0.15;
+  --spotlight-fade: 75%;
+}
+
+#cursor-spotlight {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    var(--spotlight-size) circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgba(10, 132, 255, var(--spotlight-core)),
+    rgba(191, 90, 242, calc(var(--spotlight-core) * 0.55)) 32%,
+    transparent var(--spotlight-fade)
+  );
+  transition: opacity 0.4s ease;
+}
+
+#cursor-spotlight.is-active {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  #cursor-spotlight {
+    display: none;
+  }
+}
