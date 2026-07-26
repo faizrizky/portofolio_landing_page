@@ -1,48 +1,44 @@
 import NavbarSkeleton from "@/components/skeletons/Navbarskeleton";
-import HeroSkeleton from "@/components/skeletons/Herosskeleton";
-import ProjectGridSkeleton from "@/components/skeletons/Projectgridskeleton";
-import AboutSkeleton from "@/components/skeletons/Aboutskeleton";
-import ContactSkeleton from "@/components/skeletons/Contactskeleton";
 import StatusBarSkeleton from "@/components/skeletons/Statusbarskeleton";
+import Skeleton from "@/components/skeletons/Skeleton";
 
 export default function Loading() {
   return (
     <>
       <NavbarSkeleton />
-      <main>
-        <HeroSkeleton />
+      <main className="mx-auto max-w-3xl px-6 py-16">
+        <Skeleton className="h-4 w-40 rounded" />
 
-        <section className="mx-auto max-w-5xl scroll-mt-20 px-6 py-20">
-          <div className="mb-8 flex items-baseline gap-3">
-            <span className="font-mono text-sm text-muted">02</span>
-            <h2 className="font-display text-2xl font-semibold text-ink">
-              Projects
-            </h2>
-          </div>
-          <ProjectGridSkeleton />
-        </section>
+        <div className="mt-6 flex items-center gap-3">
+          <Skeleton className="h-5 w-16 rounded-full" />
+        </div>
 
-        <section className="scroll-mt-20 border-t border-white/10 bg-white/[0.03] backdrop-blur-xl">
-          <div className="mx-auto max-w-5xl px-6 py-20">
-            <div className="mb-6 flex items-baseline gap-3">
-              <span className="font-mono text-sm text-muted">03</span>
-              <h2 className="font-display text-2xl font-semibold text-ink">
-                About
-              </h2>
-            </div>
-            <AboutSkeleton />
-          </div>
-        </section>
+        <Skeleton className="mt-4 h-8 w-3/4 rounded-lg sm:h-10" />
+        <Skeleton className="mt-3 h-4 w-40 rounded" />
 
-        <section className="mx-auto max-w-5xl scroll-mt-20 px-6 py-20">
-          <div className="mb-6 flex items-baseline gap-3">
-            <span className="font-mono text-sm text-muted">04</span>
-            <h2 className="font-display text-2xl font-semibold text-ink">
-              Contact
-            </h2>
-          </div>
-          <ContactSkeleton />
-        </section>
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          <Skeleton className="h-5 w-16 rounded-full" />
+          <Skeleton className="h-5 w-20 rounded-full" />
+          <Skeleton className="h-5 w-14 rounded-full" />
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-4">
+          <Skeleton className="h-9 w-32 rounded-full" />
+          <Skeleton className="h-9 w-36 rounded-full" />
+        </div>
+
+        <div className="mt-10 space-y-3">
+          <Skeleton className="h-4 w-full rounded" />
+          <Skeleton className="h-4 w-full rounded" />
+          <Skeleton className="h-4 w-5/6 rounded" />
+          <Skeleton className="h-4 w-full rounded" />
+          <Skeleton className="h-4 w-2/3 rounded" />
+        </div>
+
+        <div className="mt-12 space-y-6">
+          <Skeleton className="h-3 w-24 rounded" />
+          <Skeleton className="aspect-[16/10] w-full rounded-2xl" />
+        </div>
       </main>
       <StatusBarSkeleton />
     </>
