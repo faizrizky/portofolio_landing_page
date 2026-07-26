@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import LightboxImage from "./LightboxImage";
 
 // Renders project.description as Markdown. This is what lets an admin
 // insert images anywhere inside the write-up — just drop
@@ -22,22 +23,9 @@ export default function ProjectContent({ content }: { content: string }) {
               {children}
             </h3>
           ),
-          p: ({ node, children }) => {
-            // Markdown selalu bungkus `![]()` dalam <p>, tapi <figure> gak
-            // boleh nested di dalam <p> (invalid HTML). Kalau isi paragraf
-            // cuma 1 gambar, skip <p>-nya dan render figure-nya langsung.
-            const onlyChild = node?.children?.length === 1 ? node.children[0] : null;
-            const isImageOnly =
-              onlyChild &&
-              onlyChild.type === "element" &&
-              onlyChild.tagName === "img";
-
-            if (isImageOnly) {
-              return <>{children}</>;
-            }
-
-            return <p className="mb-5 leading-relaxed text-ink/80">{children}</p>;
-          },
+          p: ({ children }) => (
+            <p className="mb-5 leading-relaxed text-ink/80">{children}</p>
+          ),
           a: ({ href, children }) => (
             <a
               href={href}
@@ -63,22 +51,7 @@ export default function ProjectContent({ content }: { content: string }) {
             </blockquote>
           ),
           img: ({ src, alt }) => (
-            // max-w & max-h supaya gambar gak dominan di layar besar —
-            // ganti angka di max-w-md / max-h-[360px] kalau mau ukuran lain.
-            <figure className="glass mx-auto my-8 max-w-md overflow-hidden rounded-2xl">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={src as string}
-                alt={alt ?? ""}
-                loading="lazy"
-                className="max-h-[360px] w-full object-cover"
-              />
-              {alt && (
-                <figcaption className="border-t border-white/10 px-4 py-2 text-center font-mono text-xs text-muted">
-                  {alt}
-                </figcaption>
-              )}
-            </figure>
+            <LightboxImage src={src as string} alt={alt} />
           ),
         }}
       >

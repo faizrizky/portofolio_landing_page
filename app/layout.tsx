@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Inter, JetBrains_Mono } from "next/font/google";
 import CursorSpotlight from "@/components/CursorSpotlight";
 import BackToTop from "@/components/BackToTop";
-import { getProfile } from "@/lib/api";
+import LightboxProvider from "@/components/LightboxProvider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -23,39 +23,20 @@ const jbMono = JetBrains_Mono({
   variable: "--font-jbmono",
 });
 
-// Dynamic — narik nama/role/tagline dari admin panel, jadi judul tab browser
-// dan preview link (WhatsApp/Twitter/dll) ikut update begitu kamu ganti
-// profile, tanpa perlu edit kode ini lagi.
-export async function generateMetadata(): Promise<Metadata> {
-  const profile = await getProfile();
+export const metadata: Metadata = {
+  title: "Nama Kamu — Full-Stack Developer",
+  description: "Portofolio project freelance: web app, dashboard, dan API yang sudah dikerjakan.",
+};
 
-  if (!profile) {
-    return {
-      title: "Portfolio",
-      description: "Portofolio project freelance.",
-    };
-  }
-
-  return {
-    title: `${profile.name} — ${profile.role}`,
-    description: profile.tagline,
-  };
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="id"
-      className={`${manrope.variable} ${inter.variable} ${jbMono.variable}`}
-    >
-      <body suppressHydrationWarning>
+    <html lang="id" className={`${manrope.variable} ${inter.variable} ${jbMono.variable}`}>
+      <body>
         <CursorSpotlight />
-        {children}
-        <BackToTop />
+        <LightboxProvider>
+          {children}
+          <BackToTop />
+        </LightboxProvider>
       </body>
     </html>
   );

@@ -1,13 +1,15 @@
 import Link from "next/link";
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
 import { getProjectBySlug } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import StatusBar from "@/components/StatusBar";
 import ProjectContent from "@/components/ProjectContent";
+import LightboxThumbnail from "@/components/LightboxThumbnail";
 import { getProfile } from "@/lib/api";
 
+// TEMP: dikomentar dulu buat testing skeleton loading — halaman statis (ISR)
+// nggak nge-stream Suspense fallback, jadi loading.tsx nggak pernah kepakai
+// selama baris ini aktif. Aktifkan lagi setelah selesai testing.
 export const revalidate = 60;
 
 const categoryColor: Record<string, string> = {
@@ -17,29 +19,7 @@ const categoryColor: Record<string, string> = {
   tool: "text-warn border-warn/30 bg-warn/10",
 };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-  const project = await getProjectBySlug(slug);
-
-  if (!project) {
-    return { title: "Project tidak ditemukan" };
-  }
-
-  return {
-    title: project.title,
-    description: project.summary,
-  };
-}
-
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [project, profile] = await Promise.all([
     getProjectBySlug(slug),
@@ -48,10 +28,7 @@ export default async function ProjectDetailPage({
 
   if (!project) notFound();
 
-  const tags = project.techStack
-    .split(",")
-    .map((t) => t.trim())
-    .filter(Boolean);
+  const tags = project.techStack.split(",").map((t) => t.trim()).filter(Boolean);
   const screenshots = project.screenshots
     .split(/\r?\n/)
     .map((s) => s.trim())
@@ -62,30 +39,19 @@ export default async function ProjectDetailPage({
     <>
       <Navbar name={profile?.name ?? "portfolio"} />
       <main className="mx-auto max-w-3xl px-6 py-16">
-        <Link
-          href="/#projects"
-          className="font-mono text-sm text-muted hover:text-func"
-        >
+        <Link href="/#projects" className="font-mono text-sm text-muted hover:text-func">
           ← kembali ke semua project
         </Link>
 
         <div className="mt-6 flex items-center gap-3">
-          <span
-            className={`rounded-full border px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wide ${colorClass}`}
-          >
+          <span className={`rounded-full border px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-wide ${colorClass}`}>
             {project.category}
           </span>
-          {project.featured && (
-            <span className="font-mono text-[11px] text-warn">★ featured</span>
-          )}
+          {project.featured && <span className="font-mono text-[11px] text-warn">★ featured</span>}
         </div>
 
-        <h1 className="mt-4 font-display text-3xl font-bold text-ink sm:text-4xl">
-          {project.title}
-        </h1>
-        {project.role && (
-          <p className="mt-2 font-mono text-sm text-keyword">{project.role}</p>
-        )}
+        <h1 className="mt-4 font-display text-3xl font-bold text-ink sm:text-4xl">{project.title}</h1>
+        {project.role && <p className="mt-2 font-mono text-sm text-keyword">{project.role}</p>}
 
         <div className="mt-4 flex flex-wrap gap-1.5">
           {tags.map((tag) => (
@@ -127,16 +93,7 @@ export default async function ProjectDetailPage({
           <div className="mt-12 space-y-6">
             <p className="font-mono text-xs text-muted">// screenshots</p>
             {screenshots.map((src, i) => (
-              <div key={src} className="glass mx-auto max-w-lg overflow-hidden rounded-2xl">
-                <Image
-                  src={src}
-                  alt={`${project.title} screenshot ${i + 1}`}
-                  width={800}
-                  height={500}
-                  className="w-full"
-                  sizes="(max-width: 768px) 100vw, 512px"
-                />
-              </div>
+              <LightboxThumbnail key={src} src={src} alt={`${project.title} screenshot ${i + 1}`} />
             ))}
           </div>
         )}
