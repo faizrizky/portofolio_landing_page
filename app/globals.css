@@ -5,6 +5,7 @@
 @layer base {
   html {
     color-scheme: dark;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -49,26 +50,10 @@ body::after {
   inset: -20%;
   z-index: -1;
   background:
-    radial-gradient(
-      38% 32% at 18% 22%,
-      rgba(10, 132, 255, 0.55),
-      transparent 70%
-    ),
-    radial-gradient(
-      42% 38% at 82% 15%,
-      rgba(191, 90, 242, 0.45),
-      transparent 70%
-    ),
-    radial-gradient(
-      46% 40% at 75% 78%,
-      rgba(48, 209, 88, 0.28),
-      transparent 70%
-    ),
-    radial-gradient(
-      34% 30% at 15% 82%,
-      rgba(255, 159, 10, 0.28),
-      transparent 70%
-    );
+    radial-gradient(38% 32% at 18% 22%, rgba(10, 132, 255, 0.55), transparent 70%),
+    radial-gradient(42% 38% at 82% 15%, rgba(191, 90, 242, 0.45), transparent 70%),
+    radial-gradient(46% 40% at 75% 78%, rgba(48, 209, 88, 0.28), transparent 70%),
+    radial-gradient(34% 30% at 15% 82%, rgba(255, 159, 10, 0.28), transparent 70%);
   filter: blur(90px) saturate(140%);
   animation: mac-drift 28s ease-in-out infinite alternate;
 }
@@ -103,9 +88,7 @@ body::after {
   backdrop-filter: blur(28px) saturate(160%);
   -webkit-backdrop-filter: blur(28px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .glass-strong {
@@ -116,15 +99,48 @@ body::after {
 }
 
 .glass-hover {
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    transform 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
 .glass-hover:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.24);
+}
+
+/* -----------------------------------------------------------------
+   Skeleton loading blocks. A light sweep animates across a frosted
+   rectangle — reads as a glint of light on glass rather than a
+   generic gray shimmer.
+----------------------------------------------------------------- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  background-size: 300px 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -300px 0;
+  }
+  100% {
+    background-position: calc(300px + 100%) 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
 }
 
 /* -----------------------------------------------------------------
@@ -141,11 +157,7 @@ body::after {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(
-    480px circle at var(--x, 50%) var(--y, 50%),
-    rgba(10, 132, 255, 0.18),
-    transparent 62%
-  );
+  background: radial-gradient(480px circle at var(--x, 50%) var(--y, 50%), rgba(10, 132, 255, 0.18), transparent 62%);
   opacity: 0;
   transition: opacity 0.35s ease;
   pointer-events: none;

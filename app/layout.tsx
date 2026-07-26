@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, Inter, JetBrains_Mono } from "next/font/google";
 import CursorSpotlight from "@/components/CursorSpotlight";
+import BackToTop from "@/components/BackToTop";
 import { getProfile } from "@/lib/api";
 import "./globals.css";
 
@@ -54,6 +55,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <CursorSpotlight />
         {children}
+        <BackToTop />
       </body>
     </html>
   );
