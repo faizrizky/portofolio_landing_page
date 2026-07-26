@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ProjectGrid from "@/components/ProjectGrid";
 import StatusBar from "@/components/StatusBar";
+import { Mail, MessageCircle, Github, Linkedin, Download } from "lucide-react";
 
 export default async function HomePage() {
   const [profile, projects] = await Promise.all([getProfile(), getProjects()]);
@@ -65,17 +66,32 @@ export default async function HomePage() {
           <div className="flex flex-wrap gap-4">
             <a
               href={`mailto:${profile.email}`}
-              className="rounded-full bg-func px-5 py-2.5 font-mono text-sm font-medium text-white shadow-[0_4px_20px_rgba(10,132,255,0.45)] transition-transform hover:-translate-y-0.5"
+              className="flex items-center gap-2 rounded-full bg-func px-5 py-2.5 font-mono text-sm font-medium text-white shadow-[0_4px_20px_rgba(10,132,255,0.45)] transition-transform hover:-translate-y-0.5"
             >
+              <Mail className="h-4 w-4" />
               {profile.email}
             </a>
+            {profile.whatsapp && (
+              <a
+                href={`https://wa.me/${profile.whatsapp}?text=${encodeURIComponent(
+                  `Halo ${profile.name}, saya tertarik diskusi soal project.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2.5 font-mono text-sm font-medium text-white shadow-[0_4px_20px_rgba(37,211,102,0.45)] transition-transform hover:-translate-y-0.5"
+              >
+                <MessageCircle className="h-4 w-4" />
+                whatsapp
+              </a>
+            )}
             {profile.githubUrl && (
               <a
                 href={profile.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-mono text-sm text-ink backdrop-blur-xl transition-colors hover:border-white/25 hover:bg-white/10"
+                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-mono text-sm text-ink backdrop-blur-xl transition-colors hover:border-white/25 hover:bg-white/10"
               >
+                <Github className="h-4 w-4" />
                 github
               </a>
             )}
@@ -84,8 +100,9 @@ export default async function HomePage() {
                 href={profile.linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-mono text-sm text-ink backdrop-blur-xl transition-colors hover:border-white/25 hover:bg-white/10"
+                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-mono text-sm text-ink backdrop-blur-xl transition-colors hover:border-white/25 hover:bg-white/10"
               >
+                <Linkedin className="h-4 w-4" />
                 linkedin
               </a>
             )}
@@ -94,8 +111,9 @@ export default async function HomePage() {
                 href={profile.cvUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-mono text-sm text-ink backdrop-blur-xl transition-colors hover:border-white/25 hover:bg-white/10"
+                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 font-mono text-sm text-ink backdrop-blur-xl transition-colors hover:border-white/25 hover:bg-white/10"
               >
+                <Download className="h-4 w-4" />
                 download cv
               </a>
             )}

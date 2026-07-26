@@ -23,16 +23,20 @@ export default function ProjectContent({ content }: { content: string }) {
             </h3>
           ),
           p: ({ node, children }) => {
-            const onlyChild =
-              node?.children?.length === 1 ? node.children[0] : null;
+            // Markdown selalu bungkus `![]()` dalam <p>, tapi <figure> gak
+            // boleh nested di dalam <p> (invalid HTML). Kalau isi paragraf
+            // cuma 1 gambar, skip <p>-nya dan render figure-nya langsung.
+            const onlyChild = node?.children?.length === 1 ? node.children[0] : null;
             const isImageOnly =
               onlyChild &&
               onlyChild.type === "element" &&
               onlyChild.tagName === "img";
-            if (isImageOnly) return <>{children}</>;
-            return (
-              <p className="mb-5 leading-relaxed text-ink/80">{children}</p>
-            );
+
+            if (isImageOnly) {
+              return <>{children}</>;
+            }
+
+            return <p className="mb-5 leading-relaxed text-ink/80">{children}</p>;
           },
           a: ({ href, children }) => (
             <a
@@ -59,13 +63,15 @@ export default function ProjectContent({ content }: { content: string }) {
             </blockquote>
           ),
           img: ({ src, alt }) => (
-            <figure className="glass my-8 overflow-hidden rounded-2xl">
+            // max-w & max-h supaya gambar gak dominan di layar besar —
+            // ganti angka di max-w-md / max-h-[360px] kalau mau ukuran lain.
+            <figure className="glass mx-auto my-8 max-w-md overflow-hidden rounded-2xl">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={src as string}
                 alt={alt ?? ""}
-                className="w-full"
                 loading="lazy"
+                className="max-h-[360px] w-full object-cover"
               />
               {alt && (
                 <figcaption className="border-t border-white/10 px-4 py-2 text-center font-mono text-xs text-muted">

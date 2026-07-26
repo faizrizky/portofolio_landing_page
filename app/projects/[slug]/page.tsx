@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { getProjectBySlug } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import StatusBar from "@/components/StatusBar";
@@ -15,6 +16,24 @@ const categoryColor: Record<string, string> = {
   api: "text-string border-string/30 bg-string/10",
   tool: "text-warn border-warn/30 bg-warn/10",
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const project = await getProjectBySlug(slug);
+
+  if (!project) {
+    return { title: "Project tidak ditemukan" };
+  }
+
+  return {
+    title: project.title,
+    description: project.summary,
+  };
+}
 
 export default async function ProjectDetailPage({
   params,
@@ -108,17 +127,14 @@ export default async function ProjectDetailPage({
           <div className="mt-12 space-y-6">
             <p className="font-mono text-xs text-muted">// screenshots</p>
             {screenshots.map((src, i) => (
-              <div
-                key={src}
-                className="glass mx-auto max-w-lg overflow-hidden rounded-2xl"
-              >
+              <div key={src} className="glass mx-auto max-w-lg overflow-hidden rounded-2xl">
                 <Image
                   src={src}
                   alt={`${project.title} screenshot ${i + 1}`}
                   width={800}
                   height={500}
                   className="w-full"
-                  sizes="(max-width: 768px) 100vw, 768px"
+                  sizes="(max-width: 768px) 100vw, 512px"
                 />
               </div>
             ))}

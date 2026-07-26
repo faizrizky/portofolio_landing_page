@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope, Inter, JetBrains_Mono } from "next/font/google";
 import CursorSpotlight from "@/components/CursorSpotlight";
-import "./globals.css";
 import { getProfile } from "@/lib/api";
+import "./globals.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -22,9 +22,19 @@ const jbMono = JetBrains_Mono({
   variable: "--font-jbmono",
 });
 
+// Dynamic — narik nama/role/tagline dari admin panel, jadi judul tab browser
+// dan preview link (WhatsApp/Twitter/dll) ikut update begitu kamu ganti
+// profile, tanpa perlu edit kode ini lagi.
 export async function generateMetadata(): Promise<Metadata> {
   const profile = await getProfile();
-  if (!profile) return { title: "Portfolio", description: "..." };
+
+  if (!profile) {
+    return {
+      title: "Portfolio",
+      description: "Portofolio project freelance.",
+    };
+  }
+
   return {
     title: `${profile.name} — ${profile.role}`,
     description: profile.tagline,

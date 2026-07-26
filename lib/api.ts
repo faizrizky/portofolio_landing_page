@@ -7,6 +7,7 @@ export type Profile = {
   about: string;
   email: string;
   location: string | null;
+  whatsapp: string | null;
   githubUrl: string | null;
   linkedinUrl: string | null;
   cvUrl: string | null;
