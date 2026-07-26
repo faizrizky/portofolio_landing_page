@@ -71,9 +71,9 @@ export default async function HomePage() {
               <Mail className="h-4 w-4" />
               {profile.email}
             </a>
-            {profile.whatsapp && (
+            {profile.whatsapp && profile.whatsapp.replace(/\D/g, "").length >= 8 && (
               <a
-                href={`https://wa.me/${profile.whatsapp}?text=${encodeURIComponent(
+                href={`https://wa.me/${profile.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(
                   `Halo ${profile.name}, saya tertarik diskusi soal project.`
                 )}`}
                 target="_blank"
